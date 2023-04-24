@@ -13,7 +13,7 @@ import com.oceantech.monitorsaude.model.Medicamento
 @Database(entities = [Medicamento::class], version = 1, exportSchema = false)
 @TypeConverters(DateConverter::class, TimeListConverter::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun medicationDao(): MedicamentoDao
+    abstract fun medicamentoDao(): MedicamentoDao
 
     companion object {
 

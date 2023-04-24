@@ -5,15 +5,19 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.oceantech.monitorsaude.database.AppDatabase
+import com.oceantech.monitorsaude.database.dao.MedicamentoDao
 import com.oceantech.monitorsaude.databinding.ActivityMedicamentoBinding
 import com.oceantech.monitorsaude.extensions.format
 import com.oceantech.monitorsaude.extensions.text
 import com.oceantech.monitorsaude.model.Medicamento
+import com.oceantech.monitorsaude.viewmodel.MedicamentoViewModelFactory
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -21,7 +25,13 @@ import java.util.*
 class MedicamentoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMedicamentoBinding
-    private val viewModel: MedicamentoViewModel by viewModels()
+
+    private val viewModel: MedicamentoViewModel by viewModels {
+        ViewModelProvider.AndroidViewModelFactory.getInstance(application)
+        MedicamentoViewModelFactory(
+            MedicamentoRepository(MedicamentoDataSource(AppDatabase.getInstance(this).medicamentoDao()))
+        )
+    }
 
     private var medicationId = 0
 
