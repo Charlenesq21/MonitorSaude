@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Monitora Saude</string>
+    <string name="label_medicamentos">Medicamentos</string>
+    <string name="label_txt_nome">Nome</string>
+    <string name="label_data">Data</string>
+    <string name="label_dosagem">Dosagem</string>
+    <string name="label_hora">Hora</string>
+    <string name="label_cancela">Cancelar</string>
+    <string name="label_novo_medicamento">Novo Medicamento</string>
+    <string name="btn_txt_monitorar">Monitorar Pressão</string>
+    <string name="btn_txt_medicamentos">Medicamentos</string>
+</resources>
