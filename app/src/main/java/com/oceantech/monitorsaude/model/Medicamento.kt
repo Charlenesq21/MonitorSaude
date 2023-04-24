@@ -9,6 +9,6 @@ import androidx.room.PrimaryKey
         val id: Int = 0,
         val nome: String,
         val dosagem: String,
-        val horarios: List<String>,
-        val datas: List<String>
+        val horarios: List<String> = emptyList(),
+        val datas: List<String> = emptyList()
     )
