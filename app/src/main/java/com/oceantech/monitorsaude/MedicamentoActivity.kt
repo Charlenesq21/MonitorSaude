@@ -54,6 +54,7 @@ class MedicamentoActivity : AppCompatActivity() {
             datePicker.addOnPositiveButtonClickListener {
                 val timeZone = TimeZone.getDefault()
                 val offset = timeZone.getOffset(Date().time) * -1
+                viewModel.onDataSelecionada(Date(it + offset).format())
                 binding.txtData.text = Date(it + offset).format()
             }
             datePicker.show(supportFragmentManager, "DATE_PICKER_TAG")
@@ -64,6 +65,7 @@ class MedicamentoActivity : AppCompatActivity() {
                 .setTimeFormat(TimeFormat.CLOCK_24H)
                 .build()
             timePicker.addOnPositiveButtonClickListener {
+                viewModel.onHorarioSelecionado("$${timePicker.hour} ${timePicker.minute}")
                 binding.txtHour.text = "${timePicker.hour} ${timePicker.minute}"
             }
 
@@ -101,15 +103,19 @@ class MedicamentoActivity : AppCompatActivity() {
             return
         }
 
-        viewModel.insertMedication(
+        val horariosLista = viewModel.horarios.joinToString(",")
+        val datasLista = viewModel.datas.joinToString(",")
+
+        viewModel.inserirMedicamento(
             Medicamento(
                 medicationId,
                 nome = nome,
                 dosagem = dosagem,
-                horarios = horas.split(","),
-                datas = datas.split(",")
+                horarios = horariosLista.split(","),
+                datas = datasLista.split(",")
             )
         )
+
 
         finish()
     }
