@@ -12,13 +12,11 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.oceantech.monitorsaude.database.AppDatabase
-import com.oceantech.monitorsaude.database.dao.MedicamentoDao
 import com.oceantech.monitorsaude.databinding.ActivityMedicamentoBinding
-import com.oceantech.monitorsaude.extensions.format
 import com.oceantech.monitorsaude.extensions.text
 import com.oceantech.monitorsaude.model.Medicamento
-import com.oceantech.monitorsaude.viewmodel.MedicamentoViewModelFactory
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -26,11 +24,11 @@ class MedicamentoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMedicamentoBinding
 
+    private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
     private val viewModel: MedicamentoViewModel by viewModels {
-        ViewModelProvider.AndroidViewModelFactory.getInstance(application)
-        MedicamentoViewModelFactory(
-            MedicamentoRepository(MedicamentoDataSource(AppDatabase.getInstance(this).medicamentoDao()))
-        )
+        MedicamentoViewModel.Factory
     }
 
     private var medicationId = 0
@@ -61,11 +59,9 @@ class MedicamentoActivity : AppCompatActivity() {
         binding.txtData.editText?.setOnClickListener {
             val datePicker = MaterialDatePicker.Builder.datePicker().build()
 
-            datePicker.addOnPositiveButtonClickListener {
-                val timeZone = TimeZone.getDefault()
-                val offset = timeZone.getOffset(Date().time) * -1
-                viewModel.onDataSelecionada(Date(it + offset).format())
-                binding.txtData.text = Date(it + offset).format()
+            datePicker.addOnPositiveButtonClickListener { timestamp ->
+                viewModel.onDataSelecionada(Date(timestamp))
+                binding.txtData.text = dateFormat.format(Date(timestamp))
             }
             datePicker.show(supportFragmentManager, "DATE_PICKER_TAG")
         }
@@ -75,24 +71,15 @@ class MedicamentoActivity : AppCompatActivity() {
                 .setTimeFormat(TimeFormat.CLOCK_24H)
                 .build()
             timePicker.addOnPositiveButtonClickListener {
-                viewModel.onHorarioSelecionado("$${timePicker.hour} ${timePicker.minute}")
-                binding.txtHour.text = "${timePicker.hour} ${timePicker.minute}"
+                val hour = if (timePicker.hour in 0..9) "0${timePicker.hour}" else timePicker.hour.toString()
+                val minute = if (timePicker.minute in 0..9) "0${timePicker.minute}" else timePicker.minute.toString()
+                val horario = "$hour:$minute"
+                viewModel.onHorarioSelecionado(horario)
+                binding.txtHour.text = horario
             }
-
             timePicker.show(supportFragmentManager, null)
         }
 
-        binding.txtHour.editText?.setOnClickListener {
-            val timePicker = MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_24H)
-                .build()
-            timePicker.addOnPositiveButtonClickListener {
-                val minute = if(timePicker.minute in 0..9) "0${timePicker.minute}" else timePicker.minute
-                val hour = if(timePicker.hour in 0..9) "0${timePicker.hour}" else timePicker.hour
-                binding.txtHour.text = "$hour:$minute"
-            }
-            timePicker.show(supportFragmentManager,null)
-        }
     }
 
     override fun onDestroy() {
@@ -113,19 +100,23 @@ class MedicamentoActivity : AppCompatActivity() {
             return
         }
 
-        val horariosLista = viewModel.horarios.joinToString(",")
-        val datasLista = viewModel.datas.joinToString(",")
-
-        viewModel.inserirMedicamento(
-            Medicamento(
-                medicationId,
-                nome = nome,
-                dosagem = dosagem,
-                horarios = horariosLista.split(","),
-                datas = datasLista.split(",")
-            )
+        val medicamento = Medicamento(
+            medicationId,
+            nome = nome,
+            dosagem = dosagem,
+            horarios = horas.split(","),
+            datas = datas.split(",")
         )
 
+        val datasFormatadas = medicamento.datas.map { dateFormat.parse(it)!! }
+            .map { dateFormat.format(it) }
+
+        val horariosFormatados = medicamento.horarios.map { timeFormat.parse(it)!! }
+            .map { timeFormat.format(it) }
+
+        val medicamentoAtualizado = medicamento.copy(datas = datasFormatadas, horarios = horariosFormatados)
+
+        viewModel.inserirMedicamento(medicamentoAtualizado)
 
         finish()
     }
