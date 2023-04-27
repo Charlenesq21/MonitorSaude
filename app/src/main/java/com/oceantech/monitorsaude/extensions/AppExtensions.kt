@@ -7,13 +7,14 @@ import java.util.*
 private val locale = Locale("pt", "BR")
 
 fun String.toDate(format: String): Date {
-    val dateFormat = SimpleDateFormat(format, Locale.getDefault())
+    val dateFormat = SimpleDateFormat(format, locale)
     return dateFormat.parse(this)!!
 }
 
 // Extensão para formatar data
 fun Date.formatDate(): String {
     val dateFormat = SimpleDateFormat("dd/MM/yyyy", locale)
+    dateFormat.timeZone = TimeZone.getTimeZone("UTC") // define o fuso horário para UTC
     return dateFormat.format(this)
 }
 

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.oceantech.monitorsaude.MedicamentoRepository
 import com.oceantech.monitorsaude.MyApplication
+import com.oceantech.monitorsaude.extensions.formatDate
 import com.oceantech.monitorsaude.model.Medicamento
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -53,7 +54,7 @@ class MedicamentoViewModel(
     }
 
     fun onDataSelecionada(date: Date) {
-        val dataFormatada = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(date)
+        val dataFormatada = date.formatDate()
         addData(dataFormatada)
     }
 

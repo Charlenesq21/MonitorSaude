@@ -53,7 +53,8 @@ class MedicamentoActivity : AppCompatActivity() {
     private fun insertListeners() {
 
         binding.txtData.editText?.setOnClickListener {
-            val datePicker = MaterialDatePicker.Builder.datePicker().build()
+            val datePicker = MaterialDatePicker.Builder.datePicker()
+                .build()
 
             datePicker.addOnPositiveButtonClickListener { timestamp ->
                 viewModel.onDataSelecionada(Date(timestamp))
