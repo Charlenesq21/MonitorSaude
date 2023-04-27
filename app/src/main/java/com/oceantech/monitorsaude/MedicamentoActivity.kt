@@ -5,13 +5,12 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import com.oceantech.monitorsaude.database.AppDatabase
+import com.oceantech.monitorsaude.database.dao.MedicamentoDao
 import com.oceantech.monitorsaude.databinding.ActivityMedicamentoBinding
 import com.oceantech.monitorsaude.extensions.text
 import com.oceantech.monitorsaude.model.Medicamento
@@ -48,7 +47,6 @@ class MedicamentoActivity : AppCompatActivity() {
             lifecycleScope.launch{
                 viewModel.getById(medicationId)
             }
-
         }
 
         insertListeners()

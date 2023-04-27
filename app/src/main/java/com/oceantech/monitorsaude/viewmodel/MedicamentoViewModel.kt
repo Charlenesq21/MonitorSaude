@@ -11,7 +11,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class MedicamentoViewModel(private val medicamentoRepository: MedicamentoRepository, private val savedStateHandle: SavedStateHandle) : ViewModel() {
+class MedicamentoViewModel(
+    private val medicamentoRepository: MedicamentoRepository,
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
     private val _medicamentos = MutableLiveData<List<Medicamento>>()
     val medicamentos: LiveData<List<Medicamento>> = _medicamentos
@@ -97,6 +100,7 @@ class MedicamentoViewModel(private val medicamentoRepository: MedicamentoReposit
             }
         }
     }
+
 }
 
 
