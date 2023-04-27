@@ -6,12 +6,26 @@ import java.util.*
 
 private val locale = Locale("pt", "BR")
 
-fun Date.format() : String {
-    return SimpleDateFormat("dd/MM/yyyy", locale).format(this)
+fun String.toDate(format: String): Date {
+    val dateFormat = SimpleDateFormat(format, Locale.getDefault())
+    return dateFormat.parse(this)!!
 }
 
-var TextInputLayout.text : String
-    get() = editText?.text?.toString() ?: " "
+// Extensão para formatar data
+fun Date.formatDate(): String {
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy", locale)
+    return dateFormat.format(this)
+}
+
+// Extensão para formatar hora
+fun Date.formatTime(): String {
+    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return timeFormat.format(this)
+}
+
+// Extensão para setar o texto do TextInputLayout
+var TextInputLayout.text: String
+    get() = editText?.text?.toString() ?: ""
     set(value) {
         editText?.setText(value)
     }

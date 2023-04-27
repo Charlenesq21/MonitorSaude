@@ -10,21 +10,19 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import com.oceantech.monitorsaude.database.dao.MedicamentoDao
 import com.oceantech.monitorsaude.databinding.ActivityMedicamentoBinding
+import com.oceantech.monitorsaude.extensions.formatDate
+import com.oceantech.monitorsaude.extensions.formatTime
 import com.oceantech.monitorsaude.extensions.text
+import com.oceantech.monitorsaude.extensions.toDate
 import com.oceantech.monitorsaude.model.Medicamento
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.*
 
 
 class MedicamentoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMedicamentoBinding
-
-    private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-    private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
     private val viewModel: MedicamentoViewModel by viewModels {
         MedicamentoViewModel.Factory
@@ -59,7 +57,7 @@ class MedicamentoActivity : AppCompatActivity() {
 
             datePicker.addOnPositiveButtonClickListener { timestamp ->
                 viewModel.onDataSelecionada(Date(timestamp))
-                binding.txtData.text = dateFormat.format(Date(timestamp))
+                binding.txtData.text = Date(timestamp).formatDate()
             }
             datePicker.show(supportFragmentManager, "DATE_PICKER_TAG")
         }
@@ -106,11 +104,11 @@ class MedicamentoActivity : AppCompatActivity() {
             datas = datas.split(",")
         )
 
-        val datasFormatadas = medicamento.datas.map { dateFormat.parse(it)!! }
-            .map { dateFormat.format(it) }
+        val datasFormatadas = medicamento.datas.map { it.toDate("dd/MM/yyyy") }
+            .map { it.formatDate() }
 
-        val horariosFormatados = medicamento.horarios.map { timeFormat.parse(it)!! }
-            .map { timeFormat.format(it) }
+        val horariosFormatados = medicamento.horarios.map { it.toDate("HH:mm") }
+            .map { it.formatTime() }
 
         val medicamentoAtualizado = medicamento.copy(datas = datasFormatadas, horarios = horariosFormatados)
 

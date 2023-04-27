@@ -48,7 +48,7 @@ class MedicamentoViewModel(
     }
 
     fun onHorarioSelecionado(timePicker: String) {
-        val horario = "${timePicker}"
+        val horario = timePicker
         addHorario(horario)
     }
 
