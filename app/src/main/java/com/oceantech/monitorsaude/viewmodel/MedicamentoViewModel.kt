@@ -93,10 +93,12 @@ class MedicamentoViewModel(
                 // Create a SavedStateHandle for this ViewModel from extras
                 val savedStateHandle = extras.createSavedStateHandle()
 
-                return MedicamentoViewModel(
-                    (application as MyApplication).medicamentoRepository,
-                    savedStateHandle
-                ) as T
+                return (application as MyApplication).medicamentoRepository?.let {
+                    MedicamentoViewModel(
+                        it,
+                        savedStateHandle
+                    )
+                } as T
             }
         }
     }
